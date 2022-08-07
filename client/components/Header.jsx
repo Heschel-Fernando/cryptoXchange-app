@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <nav className=" w-full flex md:justify-center justify-between items-center p-4 pt-6 pb-2 ">
       <div className="md:flex-[0.5] flex-initial justify-center">
-        <img src={logo} alt="company logo" className="cursor-pointer w-32  " />
+        <h1 className="cursor-pointer w-32 text-white font-bold text-3xl  ">cryptoXchange</h1>
       </div>
 
       <ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial ">

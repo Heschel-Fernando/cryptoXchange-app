@@ -2,14 +2,34 @@ import React from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
+import Input from "./Input";
+import Loader from "./Loader";
+
+import { TransactionContext } from "../src/context/TransactionContext";
+import { useContext } from "react";
+import { shortenAddress } from "../src/utils/shortenAddress";
 
 const companyCommonStyles =
   "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
-const currentAccount = false;
 const isLoading = false;
 
 const Welcome = () => {
+  const { connectWallet, currentAccount, formData, setFormData, handleChange, sendTransactions } =
+    useContext(TransactionContext);
+  /* console.log("currentAccount in welcome", currentAccount); */
+
+  const handleSubmit = (e) => {
+    const { addressTo, amount, keyword, message } = formData;
+
+    e.preventDefault();
+
+    if (!addressTo || !amount | !keyword || !message) return;
+
+    sendTransactions();
+    window.location.reload();
+  };
+
   return (
     <div className=" mt-16">
       <div className="flex md:flex-row flex-col items-start justify-between md:p-20 py-12 px-4">
@@ -23,8 +43,8 @@ const Welcome = () => {
           {!currentAccount && (
             <button
               type="button"
-              onClick={() => {}}
-              className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+              onClick={connectWallet}
+              className="flex flex-row justify-center items-center my-11 bg-[#2952e3] p-3 w-2/4 rounded-full cursor-pointer hover:bg-[#2546bd]"
             >
               <AiFillPlayCircle className="text-white mr-2" />
               <p className="text-white text-base font-semibold">Connect Wallet</p>
@@ -52,26 +72,26 @@ const Welcome = () => {
                 <BsInfoCircle fontSize={17} color="#fff" />
               </div>
               <div>
-                <p className="text-white font-light text-sm">{/* {shortenAddress(currentAccount)} */} Wallet Address</p>
+                <p className="text-white font-light text-sm">{currentAccount && shortenAddress(currentAccount)}</p>
                 <p className="text-white font-semibold text-lg mt-1">Ethereum</p>
               </div>
             </div>
           </div>
 
           <div className="p-5 mt-14 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-            <input placeholder="Address To" name="addressTo" type="text" handleChange={() => {}} />
-            <input placeholder="Amount (ETH)" name="amount" type="number" handleChange={() => {}} />
-            <input placeholder="Keyword (Gif)" name="keyword" type="text" handleChange={() => {}} />
-            <input placeholder="Enter Message" name="message" type="text" handleChange={() => {}} />
+            <Input placeholder="Address To" name="addressTo" type="text" handleChange={handleChange} />
+            <Input placeholder="Amount (ETH)" name="amount" type="number" handleChange={handleChange} />
+            <Input placeholder="Keyword (Gif)" name="keyword" type="text" handleChange={handleChange} />
+            <Input placeholder="Enter Message" name="message" type="text" handleChange={handleChange} />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
 
             {isLoading ? (
-              "<Loader />"
+              <Loader />
             ) : (
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={handleSubmit}
                 className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
               >
                 Send now

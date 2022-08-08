@@ -53,6 +53,7 @@ export const TransactionProvider = ({ children }) => {
 
       const account = ethereum.request({ method: "eth_requestAccounts" });
       setCurrentAccount(account[0]);
+
       window.location.reload();
     } catch (error) {
       throw new Error("Sorry, no Metamask accounts were detected. Please try again");
@@ -95,6 +96,8 @@ export const TransactionProvider = ({ children }) => {
       setTransactionCount(transactionCount.toNumber());
 
       setTransactionCount(transactionCount.toNumber());
+
+      window.location.reload();
     } catch (error) {
       throw new Error("Sorry, the network was unable to send that transaction right now. Please try again");
     }

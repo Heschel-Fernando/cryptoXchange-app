@@ -19,6 +19,7 @@ export const TransactionProvider = ({ children }) => {
   const [formData, setFormData] = useState({ addressTo: "", amount: "", keyword: "", message: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"));
+  const [transactions, setTransactions] = useState([]);
 
   const handleChange = (e, name) => {
     setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
@@ -37,7 +38,7 @@ export const TransactionProvider = ({ children }) => {
         setCurrentAccount(accounts[0]);
         console.log(currentAccount);
 
-        //getAllTransactions()
+        getAllTransactions();
       } else {
         console.log("No accounts found");
       }
@@ -91,6 +92,7 @@ export const TransactionProvider = ({ children }) => {
       console.log(`Success - ${transactionHash.hash}`);
 
       const transactionCount = await transactionContract.getTransactionCount();
+      setTransactionCount(transactionCount.toNumber());
 
       setTransactionCount(transactionCount.toNumber());
     } catch (error) {
@@ -98,13 +100,59 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
+  const checkTransactionExists = async () => {
+    try {
+      const transactionContract = getEthereumContract();
+      const transactionCount = await transactionContract.getTransactionCount();
+
+      window.localStorage.setItem("transactionCount", transactionCount);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Sorry, we were unable to fetch the latest transaction. Please try again");
+    }
+  };
+
+  const getAllTransactions = async () => {
+    try {
+      if (!ethereum) return "Please install Metamask";
+      const transactionContract = getEthereumContract();
+
+      const availableTransactions = await transactionContract.getAllTransactions();
+      console.log(availableTransactions);
+
+      const structuredTransactions = availableTransactions.map((transaction) => ({
+        addressTo: transaction.receiver,
+        addressFrom: transaction.sender,
+        timestamp: new Date(transaction.timestamp.toNumber() * 1000).toLocaleString(),
+        message: transaction.message,
+        keyword: transaction.keyword,
+        amount: parseInt(transaction.amount._hex) / 10 ** 18,
+      }));
+
+      console.log(structuredTransactions);
+      setTransactions(structuredTransactions);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     checkWalletConnect();
+    checkTransactionExists();
   }, []);
 
   return (
     <TransactionContext.Provider
-      value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendTransactions }}
+      value={{
+        connectWallet,
+        currentAccount,
+        formData,
+        setFormData,
+        handleChange,
+        sendTransactions,
+        transactions,
+        isLoading,
+      }}
     >
       {children}
     </TransactionContext.Provider>

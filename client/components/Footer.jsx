@@ -9,10 +9,21 @@ const Footer = () => (
         <img src={logo} alt="logo" className="w-32" />
       </div>
       <div className="flex flex-1 justify-evenly items-center flex-wrap sm:mt-0 mt-5 w-full">
-        <p className="text-white text-base text-center mx-2 cursor-pointer">Market</p>
-        <p className="text-white text-base text-center mx-2 cursor-pointer">Exchange</p>
-        <p className="text-white text-base text-center mx-2 cursor-pointer">Tutorials</p>
-        <p className="text-white text-base text-center mx-2 cursor-pointer">Wallets</p>
+        <a href="mailto:heschel31@gmail.com" className="text-white text-base text-center mx-2 cursor-pointer">
+          Portfolio
+        </a>
+        <a
+          href="https://www.linkedin.com/in/heschel-fernando-97a68b212/"
+          className="text-white text-base text-center mx-2 cursor-pointer"
+        >
+          LinkedIn
+        </a>
+        <a href="mailto:heschel31@gmail.com" className="text-white text-base text-center mx-2 cursor-pointer">
+          Resume
+        </a>
+        <a href="mailto:heschel31@gmail.com" className="text-white text-base text-center mx-2 cursor-pointer">
+          Contact
+        </a>
       </div>
     </div>
 

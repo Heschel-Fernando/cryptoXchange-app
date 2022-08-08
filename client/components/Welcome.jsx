@@ -8,6 +8,7 @@ import Loader from "./Loader";
 import { TransactionContext } from "../src/context/TransactionContext";
 import { useContext } from "react";
 import { shortenAddress } from "../src/utils/shortenAddress";
+import { useEffect } from "react";
 
 const companyCommonStyles =
   "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
@@ -15,19 +16,16 @@ const companyCommonStyles =
 const isLoading = false;
 
 const Welcome = () => {
-  const { connectWallet, currentAccount, formData, setFormData, handleChange, sendTransactions } =
+  const { connectWallet, currentAccount, formData, isLoading, handleChange, sendTransactions } =
     useContext(TransactionContext);
-  /* console.log("currentAccount in welcome", currentAccount); */
 
   const handleSubmit = (e) => {
-    const { addressTo, amount, keyword, message } = formData;
-
     e.preventDefault();
+    const { addressTo, amount, message } = formData;
 
-    if (!addressTo || !amount | !keyword || !message) return;
+    if (!addressTo || !amount || !message) return;
 
     sendTransactions();
-    window.location.reload();
   };
 
   return (
@@ -79,9 +77,8 @@ const Welcome = () => {
           </div>
 
           <div className="p-5 mt-14 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-            <Input placeholder="Address To" name="addressTo" type="text" handleChange={handleChange} />
+            <Input placeholder="Send To" name="addressTo" type="text" handleChange={handleChange} />
             <Input placeholder="Amount (ETH)" name="amount" type="number" handleChange={handleChange} />
-            <Input placeholder="Keyword (Gif)" name="keyword" type="text" handleChange={handleChange} />
             <Input placeholder="Enter Message" name="message" type="text" handleChange={handleChange} />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
